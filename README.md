@@ -53,3 +53,10 @@ drink(){
 - drink.sh => Main executable file
 
 - init.sh => initialization script (TODO)
+
+## Use case
+Index file uploaded to (with rsync): [rjoshi.com.np/tea](https://rjoshi.com.np/tea/)
+
+Above url is fetched at: [rjoshi.net](https://rjoshi.net) - [in the footer]
+
+*Both count should be same. Any inconsistency is due to caching issue.*

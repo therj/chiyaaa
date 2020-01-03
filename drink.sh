@@ -64,17 +64,17 @@ drinkTea(){
   again="${again,,}" #Lowercase
   
   
-  totalCount=$(grep -o $currentYear $historyFile | wc -l )
   if [[ $again == 'y' || $again == 'yes' ]]
   then
     # Increasae Count
     echo "$currentDateTime" >> $historyFile
-    totalCount=$(grep -o $currentYear $historyFile | wc -l )
-    echo "$totalCount" > index.html
   fi
+  totalCount=$(grep -o $currentYear $historyFile | wc -l )
+  echo "$totalCount" > index.html
+  
   echo "Total: $totalCount"
   
-  if [[ pushToRemote == 1 ]]
+  if [[ pushToRemote -eq 1 ]]
   then
     echo "**Syncing to server!**"
     

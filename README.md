@@ -60,3 +60,8 @@ Index file uploaded to (with rsync): [rjoshi.com.np/tea](https://rjoshi.com.np/t
 Above url is fetched at: [rjoshi.net](https://rjoshi.net) - [in the footer]
 
 *Both count should be same. Any inconsistency is due to caching issue.*
+
+## Otherwise
+This is an alternative to using rsync.
+
+Don't ignore the index file, push it to the repo. Keep the repo public and you can access the raw index file instead of quering the remote path.

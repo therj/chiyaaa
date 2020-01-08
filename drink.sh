@@ -4,9 +4,9 @@
 drinkTea(){
   
   # Write to history
-  currentDir=$(dirname "${0}")
-  source $currentDir/env.sh
-  historyFile="$currentDir/history.txt"
+  appDir=$(dirname "${0}")
+  source $appDir/env.sh
+  historyFile="$appDir/history.txt"
   secondLastLine=''
   lastLine=''
   
@@ -54,7 +54,7 @@ drinkTea(){
   
   distanceFromLast=$((currentTimestamp - lastTimestamp))
   
-  again=y
+  again='y'
   
   if [[ distanceFromLast -lt $((minRepeatInMinutes * 60)) ]]
   then
@@ -67,18 +67,18 @@ drinkTea(){
   if [[ $again == 'y' || $again == 'yes' ]]
   then
     # Increasae Count
+    echo "$currentDateTime"
     echo "$currentDateTime" >> $historyFile
   fi
   totalCount=$(grep -o $currentYear $historyFile | wc -l )
-  echo "$totalCount" > index.html
+  echo "$totalCount" > "$appDir/index.html"
   
   echo "Total: $totalCount"
   
   if [[ pushToRemote -eq 1 ]]
   then
     echo "**Syncing to server!**"
-    
-    rsync -avz $(pwd)/index.html $remoteUser@$remoteIp:$remotePath
+    rsync -avz $appDir/index.html $remoteUser@$remoteIp:$remotePath
   fi
 }
 

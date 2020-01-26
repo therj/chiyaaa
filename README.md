@@ -1,50 +1,117 @@
 # Tea Counter Shell
 
+## Setting up:
 
-## Setting up
+1. Fork the the repository to your account.
+2. Clone it to your device.
+
+```bash
+git clone https://github.com/<your-username>/tea-counter-shell
+```
+
 Rename `env.sample.sh` to `env.sh`
 ```bash
-  cp env.sample.sh env.sh
+cp env.sample.sh env.sh
 ```
 
-The count file is synced via `rsync` to your server to at the provided path. Some experience with ssh and servers is expected!
+**Each variable in env.sh acts as a setting in itself**
 
-## Variables
+## General Settings
+**minRepeatInMinutes:** Will ask for confirmation if you make a new entry within this many minutes of last one.
 
-**remoteUser:** Your server's ssh username
+**currentYear:** 2020. Used to make count. The count returned is for the current year. The same count is written  to index.html
 
-**remoteIp:** Server's IP or hostname
+**drinkName:** Why only `tea`? Drink anything. Used as a git commit message.
 
-**remotePath:** Path on the remote system
+**unitName:** `cup` of tea or `glass` of wine, the code doesn't care.
 
-**pushToRemote:** Enable/disable rsync. 1 to enable
+## Flags
 
-## Update the count
+All flags are enabled with 1 and disabled with any other value.
 
-Execute the `drink.sh` file.
+Git is required for git-based flags.
 
-Or set up an alias in  `.bashrc`, `.zshrc`, etc.
+**gitCommit:**  Program  will make a commit with `nth cup of tea in 2020`. `tea` and `cup` replaced with *drinkName* and *unitName* respectively. Disabling commit will also disable push operation
+
+**gitPush:** Program will push to the configured remote repository. Remote repository must be set beforehand.
+
+**rsyncToRemote:** Program will sync `index.html` file to your remote server using rsync. Not recommended if you don't have experience with servers and ssh.
+
+## rsync settings
+
+**remoteUser:** ssh username on the server
+
+**remoteIp:** IP address to ssh into.
+
+**remotePath:** The index file is synced via `rsync` to your server to at this provided path.
+
+
+## How to use
+
+### Update the count
+
+Execute the `drink.sh` file every time. Or set up an alias in  `.bashrc` (or  `.zshrc`, whatever applies for you).
 
 ```bash
 drink(){
-  /path/to/file/tea/drink.sh
+  /path/to/file/tea/drink.sh $@
 }
 ```
+*$@ is required to pass the flags from the terminal. More on that later*
 
-Example:
-If you cloned to your home directory
+If you cloned to your home directory, add the following to your `.bashrc`.
+
 ```bash
 drink(){
-  $HOME/tea-counter-shell/tea/drink.sh
+  $HOME/tea-counter-shell/drink.sh $@
 }
 ```
 
+After setting the alias, you can run as following:
+
+```
+drink
+# current datetime is appended to history file
+# index file is overwritten with updated count
+```
+
+### Passing flags
+
+If you want to increase the count but don't want to push, commit or rsync, you can disable the flags in `env.sh`. Those will act as global settings.
+
+If you need to disable some or all of those temporarily,  you can pass flags with the command.
+
+*These flags do not affect updating the history and index file.*
+
+**Example Command with flags:**
+
+```bash
+drink --no # no git commit, no push, no rsync. Just update history and index
+```
+
+```bash
+drink --nocommit # no git commit, no commit applies no push
+```
+
+```bash
+drink --nopush # commit and rsync, but no push
+```
+
+```bash
+drink --norsync # commit & push, but no  rsync
+```
+
+**Flags can be mixed**
+
+```bash
+drink --norsync --nopush # commit, but no rsync or push
+```
 
 ## Files
 
 - history.txt => all entries are saved here
 
-- env.sh => associated variables (keep it private!)
+- env.sh => associated variables (keep it private if you have rsync details!)
 
 - env.sample.sh => sample env.sh
 
@@ -55,13 +122,15 @@ drink(){
 - init.sh => initialization script (TODO)
 
 ## Use case
+### GitHub
+Index file is committed and pushed. [View the file in repo](https://github.com/therj/tea-counter-shell/blob/master/index.html) or [view as raw](https://github.com/therj/tea-counter-shell/blob/master/index.html?raw=true)
+
+
+Count accessed here could be used as a content anywhere. For example, I use in the footer of my  [blog](https://rjoshi.net).
+
+### Rsync
 Index file uploaded to (with rsync): [rjoshi.com.np/tea](https://rjoshi.com.np/tea/)
 
 Above url is fetched at: [rjoshi.net](https://rjoshi.net) - [in the footer]
 
-*Both count should be same. Any inconsistency is due to caching issue.*
-
-## Otherwise
-This is an alternative to using rsync.
-
-Don't ignore the index file, push it to the repo. Keep the repo public and you can access the raw index file instead of quering the remote path.
+*All counts should be same. Any inconsistency is due to caching, or disabled flags (rarely).*

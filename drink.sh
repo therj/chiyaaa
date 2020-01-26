@@ -2,10 +2,16 @@
 
 
 drinkTea(){
-  
   # Write to history
   appDir=$(dirname "${0}")
   source $appDir/env.sh
+  
+  # --nocommit --nopush --norsync
+  # --no = No to everything
+  # no commit also means no push
+  
+  handle_flags $@
+  
   historyFile="$appDir/history.txt"
   secondLastLine=''
   lastLine=''
@@ -66,6 +72,7 @@ drinkTea(){
   
   if [[ $again == 'y' || $again == 'yes' ]]
   then
+    again='y'
     # Increasae Count
     echo "$currentDateTime"
     echo "$currentDateTime" >> $historyFile
@@ -75,11 +82,67 @@ drinkTea(){
   
   echo "Total: $totalCount"
   
-  if [[ pushToRemote -eq 1 ]]
+  if [[ $again == 'y' ]]
   then
-    echo "**Syncing to server!**"
-    rsync -avz $appDir/index.html $remoteUser@$remoteIp:$remotePath
+    if [[ rsyncToRemote -eq 1 ]]
+    then
+      echo "**Syncing to server!**"
+      rsync -avz $appDir/index.html $remoteUser@$remoteIp:$remotePath
+      # Add more rsync here > history?
+    fi
+    if [[ gitCommit -eq 1 ]]
+    then
+      # Have a specific branch? > checkout here
+      git add index.html
+      # Add a history file as well, if you're comfortable making it public (watch gitignore)
+      git commit -m "${totalCount}th $unitName of $drinkName in $currentYear"
+      if [[ gitPush -eq 1 ]]
+      then
+        echo "**Pushing to git!**"
+        git push
+      fi
+    fi
+  else
+    echo "Not updated"
   fi
 }
 
-drinkTea
+
+has_param() {
+  local term="$1"
+  shift
+  for arg; do
+    if [[ $arg == "$term" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+handle_flags(){
+  if has_param '--no' "$@"; then
+    echo "Nothing"
+    rsyncToRemote=0
+    gitCommit=0
+    gitPush=0
+  fi
+  
+  if has_param '--nocommit' "$@"; then
+    echo "No git commit"
+    gitCommit=0
+    
+  fi
+  
+  if has_param '--nopush' "$@"; then
+    gitPush=0
+    echo "No git push"
+  fi
+  
+  if has_param '--norsync' "$@"; then
+    rsyncToRemote=0
+    echo "No rsync"
+  fi
+  
+}
+
+drinkTea $@

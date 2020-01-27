@@ -97,6 +97,7 @@ drinkTea(){
     if [[ gitCommit -eq 1 ]]
     then
       # Have a specific branch? > checkout here
+      cd $appDir
       git add index.html
       # Add a history file as well, if you're comfortable making it public (watch gitignore)
       git commit -m "${totalCount}th $unitName of $drinkName in $currentYear"

@@ -74,8 +74,12 @@ drinkTea(){
   then
     again='y'
     # Increasae Count
-    echo "$currentDateTime"
-    echo "$currentDateTime" >> $historyFile
+    if [[ $doCount == 1 ]]
+    then
+      echo "$currentDateTime"
+      echo "$currentDateTime" >> $historyFile
+      
+    fi
   fi
   totalCount=$(grep -o $currentYear $historyFile | wc -l )
   echo "$totalCount" > "$appDir/index.html"
@@ -141,6 +145,11 @@ handle_flags(){
   if has_param '--norsync' "$@"; then
     rsyncToRemote=0
     echo "No rsync"
+  fi
+  
+  if has_param '--nocount' "$@"; then
+    doCount=0
+    echo "No count"
   fi
   
 }

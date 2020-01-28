@@ -100,7 +100,12 @@ drinkTea(){
       cd $appDir
       git add index.html
       # Add a history file as well, if you're comfortable making it public (watch gitignore)
-      git commit -m "${totalCount}th $unitName of $drinkName in $currentYear"
+      
+      # 1st, 2nd, 3rd or 4th. Handle the ordinal (th)
+      ordinalChar='th' # default, just in case
+      setOrdinalChar $totalCount
+      
+      git commit -m "${totalCount}$ordinalChar $unitName of $drinkName in $currentYear"
       if [[ gitPush -eq 1 ]]
       then
         echo "**Pushing to git!**"
@@ -153,6 +158,16 @@ handle_flags(){
     echo "No count"
   fi
   
+}
+
+setOrdinalChar(){
+  # sets st, nd, rd, th for the numbers
+  case "$1" in
+    *1[0-9] | *[04-9]) ordinalChar="th";;
+    *1) ordinalChar="st";;
+    *2) ordinalChar="nd";;
+    *3) ordinalChar="rd";;
+  esac
 }
 
 drinkTea $@

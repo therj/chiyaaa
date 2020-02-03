@@ -78,6 +78,8 @@ drinkTea(){
     then
       echo "$currentDateTime"
       echo "$currentDateTime" >> $historyFile
+      # Use timestamp instead/as well!
+      # echo "$(date -d "$currentDateTime" +%s)" >> $historyFile
       
     fi
   fi
@@ -90,8 +92,8 @@ drinkTea(){
   then
     if [[ rsyncToRemote -eq 1 ]]
     then
-      echo "**Syncing to server!**"
-      rsync -avz $appDir/index.html $remoteUser@$remoteIp:$remotePath
+      echo "**Running rsync!**"
+      rsync -aqz $appDir/index.html $remoteUser@$remoteIp:$remotePath
       # Add more rsync here > history?
     fi
     if [[ gitCommit -eq 1 ]]
@@ -105,11 +107,11 @@ drinkTea(){
       ordinalChar='th' # default, just in case
       setOrdinalChar $totalCount
       
-      git commit -m "${totalCount}$ordinalChar $unitName of $drinkName in $currentYear"
+      git commit --quiet -m "${totalCount}$ordinalChar $unitName of $drinkName in $currentYear" $appDir/index.html
       if [[ gitPush -eq 1 ]]
       then
         echo "**Pushing to git!**"
-        git push
+        git push --quiet
       fi
     fi
   else

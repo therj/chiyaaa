@@ -64,10 +64,6 @@ drinkTea() {
     # Increasae Count
     if [[ $doCount == 1 ]]; then
       echo "$currentDateTime"
-      if [[ pullFromRemote -eq 1 ]]; then
-        echo "**Pulling from remote!**"
-        scp $remoteUser@$remoteIp:$remotePath/history.txt $appDir/
-      fi
       echo "$currentDateTime" >>$historyFile
       # Use timestamp instead/as well!
       # echo "$(date -d "$currentDateTime" +%s)" >> $historyFile
@@ -83,7 +79,6 @@ drinkTea() {
     if [[ rsyncToRemote -eq 1 ]]; then
       echo "**Running rsync!**"
       rsync -aqz $appDir/index.html $remoteUser@$remoteIp:$remotePath
-      rsync -aqz $appDir/history.txt $remoteUser@$remoteIp:$remotePath
       # Add more rsync here > history?
     fi
     if [[ gitCommit -eq 1 ]]; then
@@ -122,7 +117,6 @@ handle_flags() {
   if has_param '--no' "$@"; then
     echo "Nothing"
     rsyncToRemote=0
-    pullFromRemote=0
     gitCommit=0
     gitPush=0
   fi
@@ -141,11 +135,6 @@ handle_flags() {
   if has_param '--norsync' "$@"; then
     rsyncToRemote=0
     echo "No rsync"
-  fi
-
-  if has_param '--nopull' "$@"; then
-    pullFromRemote=0
-    echo "No pull from remote"
   fi
 
   if has_param '--nocount' "$@"; then

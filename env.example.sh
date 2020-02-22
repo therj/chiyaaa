@@ -19,8 +19,7 @@ gitCommit=1
 gitPush=1
 # Enable/disable rsync. enable=1
 rsyncToRemote=0
-# Pull from remote server with
-pullFromRemote=0
+
 #####################
 # RSYNC Settings
 #####################
@@ -30,3 +29,4 @@ remoteUser='root'
 remoteIp='11.111.11.111'
 # rsync path
 remotePath='/var/www/example.com/htdocs/tea/'
+

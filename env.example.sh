@@ -4,7 +4,7 @@
 # will ask for confirmation if repeated within this minutes.
 minRepeatInMinutes=70
 # current year => default count
-currentYear=2020
+currentYear=2021
 # drink name... tea or anything else!
 drinkName='tea'
 # unit for the drink...
@@ -29,4 +29,3 @@ remoteUser='root'
 remoteIp='11.111.11.111'
 # rsync path
 remotePath='/var/www/example.com/htdocs/tea/'
-

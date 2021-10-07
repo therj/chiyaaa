@@ -25,7 +25,7 @@ cp env.sample.sh env.sh
 
 **minRepeatInMinutes:** Will ask for confirmation if you make a new entry within this many minutes of last one.
 
-**currentYear:** 2020. Used to make count. The count returned is for the current year. The same count is written to index.html
+**currentYear:** 2021. Used to make count. The count returned is for the current year. The same count is written to index.html
 
 **drinkName:** Why only `tea`? Drink anything. Used as a git commit message.
 
